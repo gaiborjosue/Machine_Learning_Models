@@ -56,7 +56,18 @@ jobs:
         with:
           ref: ${{ steps.branch.outputs.branchName }}
     
-    
+      - name: Generate SVN URLs
+        id: generate_urls
+        run: |
+          echo "pythons2<<EOF" >> $GITHUB_ENV
+          python ./.github/workflows/getPythonScripts.py >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+            pythons: ${{ env.pythons }}
+        
       - name: Clone python scripts
         run: |
-          python ./.github/workflows/getPythonScripts.py
+          svn_urls="${{ env.pythons2 }}"
+          for svn_url in $svn_urls; do
+            svn export $svn_url ./${{ steps.get_path.outputs.path }}
+          done

@@ -56,12 +56,14 @@ jobs:
 
           python_scripts="${{ env.pythons }}"
           for url in $python_scripts; do
-            if [[ $url == *"/tree/"* ]]; then
-              svn_url="${url%/tree/*}/trunk/${url#*/tree/}"
-            elif [[ $url == *"/blob/"* ]]; then
-              svn_url="${url%/blob/*}/trunk/${url#*/blob/}"
-            else
-              svn_url="$url"
-            fi
+            svn_url=$(python -c "
+            import re
+            url = '$url'
+            if '/tree/' in url:
+                svn_url = re.sub(r'/tree/[^/]+', '/trunk', url)
+            elif '/blob/' in url:
+                svn_url = re.sub(r'/blob/[^/]+', '/trunk', url)
+            print(svn_url)
+            ")
             svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
           done

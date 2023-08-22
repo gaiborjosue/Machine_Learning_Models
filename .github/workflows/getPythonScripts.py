@@ -14,8 +14,7 @@ svn_urls = []
 for url in urls:
     # Replace /tree/branchName or /blob/branchName with /trunk
     svn_url = re.sub(r'/tree/[^/]+|/blob/[^/]+', '/trunk', url)
-    svn_url2 = svn_url.replace('%0D', '')
-    svn_urls.append(svn_url2)
+    svn_urls.append(svn_url)
 
 # Print the generated SVN URLs separated by newline
 print('\n'.join(svn_urls))

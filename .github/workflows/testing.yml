@@ -27,7 +27,7 @@ jobs:
       id: python_scripts
       run: |
         echo "pythons<<EOF" >> $GITHUB_ENV
-        echo ${{ steps.issue-parser.outputs.issueparser_python-scripts }} >> $GITHUB_ENV
+        echo "${{ steps.issue-parser.outputs.issueparser_python-scripts }}" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
     # Print python scripts

@@ -80,7 +80,7 @@ jobs:
 
       - name: Clone docker folder
         run: |
-          url = "${{ steps.get_docker_url.outputs.docker_url }}"
+          url="${{ steps.get_docker_url.outputs.docker_url }}"
           echo $url
           svn_url=$(echo "$url" | sed -E 's|/tree/[^/]+|/trunk|; s|/blob/[^/]+|/trunk|')
 

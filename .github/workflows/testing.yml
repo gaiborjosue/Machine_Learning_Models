@@ -54,7 +54,7 @@ jobs:
       - name: Clone python scripts
         run: |
 
-          python_scripts=${{ env.pythons }}
+          python_scripts="${{ env.pythons }}"
           for url in $python_scripts; do
             svn_url=$(echo "$url" | sed -E 's|/tree/.*$|/trunk|')
             svn export "$svn_url" ./${{ steps.get_path.outputs.path }}

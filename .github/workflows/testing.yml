@@ -25,7 +25,7 @@ jobs:
 
     - name: Get Python Scripts
       id: python_scripts
-      run: echo "pythons=${{ steps.issue-parser.outputs.issueparser_python-scripts }}" >> $GITHUB_OUTPUT
+      run: echo "pythons='${{ steps.issue-parser.outputs.issueparser_python-scripts }}'" >> $GITHUB_OUTPUT
 
     # Print python scripts
     - name: Print Python Scripts

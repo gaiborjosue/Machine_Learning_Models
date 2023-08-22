@@ -69,5 +69,17 @@ jobs:
         run: |
           svn_urls="${{ env.pythons2 }}"
           for svn_url in $svn_urls; do
-            svn export $svn_url ./${{ steps.get_path.outputs.path }}
+            svn export --force $svn_url ./${{ steps.get_path.outputs.path }}
           done
+
+  test_env_vars:
+    runs-on: ubuntu-latest
+    needs: create_new_branch
+    
+    steps:
+    
+    - uses: actions/checkout@v3
+
+    - name: Get the Path
+      id: get_path
+      run: echo "${{ needs.create_new_branch.env.pythons2 }}"

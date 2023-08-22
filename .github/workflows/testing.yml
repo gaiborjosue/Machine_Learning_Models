@@ -90,7 +90,6 @@ jobs:
           git config --global user.email "trained_models"
           git add ./${{ steps.get_path.outputs.path }}
           git commit -m "Added model folder and files"
-          git pull --rebase origin main
           git push -u origin ${{ steps.Create_Issue_Branch.outputs.branchName }}
 
   test_env_vars:

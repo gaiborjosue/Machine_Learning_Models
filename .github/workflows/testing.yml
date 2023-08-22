@@ -58,13 +58,15 @@ jobs:
     
       - name: Generate SVN URLs
         id: generate_urls
-        run: python ./.github/workflows/getPythonScripts.py
+        run: |
+          svn_urls=$(python ./.github/workflows/getPythonScripts.py)
+          echo "svn_urls=$svn_urls" >> $GITHUB_OUTPUT
         env:
             pythons: ${{ env.pythons }}
         
       - name: Clone python scripts
         run: |
-          svn_urls="${{ steps.generate_urls.outputs.stdout }}"
+          svn_urls="${{ steps.generate_urls.outputs.svn_urls }}"
           for svn_url in $svn_urls; do
             svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
           done

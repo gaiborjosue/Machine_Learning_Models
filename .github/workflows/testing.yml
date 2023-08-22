@@ -1,0 +1,39 @@
+name: Add a new model
+
+# Trigger the workflow on pull request
+on:
+  issues:
+    types: opened
+
+jobs:
+  create_new_branch:
+    if: startsWith(${{github.event.issue.title}}, "New Model:")
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      BRANCHNAME: ${{ steps.branch.outputs.branchName }}
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - uses: actions/checkout@v3
+
+    - uses: stefanbuck/github-issue-parser@v3
+      id: issue-parser
+      with:
+        template-path: .github/ISSUE_TEMPLATE/addModel.yml # optional but recommended
+
+    - name: Get Python Scripts
+      id: python_scripts
+      run: echo "pythons=${{ steps.issue-parser.outputs.issueparser_python-scripts }}" >> $GITHUB_OUTPUT
+
+    # Print python scripts
+    - name: Print Python Scripts
+      run: echo ${{ steps.python_scripts.outputs.pythons }}
+
+    # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
+    - name: Create Issue Branch
+      id: branch
+      uses: robvanderleek/create-issue-branch@main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

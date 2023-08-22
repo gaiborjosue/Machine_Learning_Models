@@ -18,6 +18,12 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - uses: actions/checkout@v3
 
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+          
       - uses: stefanbuck/github-issue-parser@v3
         id: issue-parser
         with:

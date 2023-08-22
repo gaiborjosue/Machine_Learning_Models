@@ -32,7 +32,7 @@ jobs:
 
     # Print python scripts
     - name: Print Python Scripts
-      run: echo ${{ env.pythons }}
+      run: echo "${{ env.pythons }}"
 
     # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
     - name: Create Issue Branch

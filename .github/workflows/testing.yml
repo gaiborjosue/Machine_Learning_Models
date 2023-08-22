@@ -3,10 +3,9 @@ name: Add a new model
 # Trigger the workflow on pull request
 on:
   issues:
-    types: [ assigned ]
+    types: [assigned]
 
 jobs:
-  
   create_new_branch:
     if: ${{startsWith(github.event.issue.title, 'New Model:')}}
 
@@ -16,31 +15,55 @@ jobs:
       BRANCHNAME: ${{ steps.branch.outputs.branchName }}
 
     steps:
+      # Checkout the repository to the GitHub Actions runner
+      - uses: actions/checkout@v3
+
+      - uses: stefanbuck/github-issue-parser@v3
+        id: issue-parser
+        with:
+          template-path: .github/ISSUE_TEMPLATE/addModel.yml # optional but recommended
+
+      - name: Get Python Scripts
+        id: python_scripts
+        run: |
+          echo "pythons<<EOF" >> $GITHUB_ENV
+          echo "${{ steps.issue-parser.outputs.issueparser_python-scripts }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Get the Path
+        id: get_path
+        run: echo "path=${{ steps.issue-parser.outputs.issueparser_path }}" >> $GITHUB_OUTPUT
+
+      # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
+      - name: Create Issue Branch
+        id: branch
+        uses: robvanderleek/create-issue-branch@main
+        env:
+          GITHUB_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install svn
+        run: sudo apt-get install subversion
+
+      # Checkout the repository to the GitHub Actions runner to the new branch created for the issue
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.branch.outputs.branchName }}
     
-
-    # Checkout the repository to the GitHub Actions runner
-    - uses: actions/checkout@v3
-    
-
-    - uses: stefanbuck/github-issue-parser@v3
-      id: issue-parser
-      with:
-        template-path: .github/ISSUE_TEMPLATE/addModel.yml # optional but recommended
-
-    - name: Get Python Scripts
-      id: python_scripts
-      run: |
-        echo "pythons<<EOF" >> $GITHUB_ENV
-        echo "${{ steps.issue-parser.outputs.issueparser_python-scripts }}" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-
-    # Print python scripts
-    - name: Print Python Scripts
-      run: echo "${{ env.pythons }}"
-
-    # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
-    - name: Create Issue Branch
-      id: branch
-      uses: robvanderleek/create-issue-branch@main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Clone all python scripts in the form
+      - name: Clone python scripts
+        run: |
+          python_scripts="${{ env.pythons }}""
+          IFS=$'\n' read -rd '' -a urls <<< "$python_scripts"
+          for url in "${urls[@]}"; do
+            repo_url=$(echo "$url" | sed -E 's|/tree/.*$||')
+            branch_and_path=$(echo "$url" | sed -E 's|^.*tree/||')
+            branch=$(basename "$branch_and_path")
+            folder_path=${branch_and_path#*/}
+            if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+              svn_url="$repo_url/trunk/$folder_path"
+            else
+              svn_url="$repo_url/branches/$branch/$folder_path"
+            fi
+            svn export "$svn_url" ${{ steps.get_path.outputs.path }}
+          done

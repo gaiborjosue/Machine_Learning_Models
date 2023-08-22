@@ -8,7 +8,7 @@ on:
 jobs:
   
   create_new_branch:
-    if: startsWith(github.event.issue.title, "New Model:")
+    if: startsWith(${{github.event.issue.title}}, 'New Model:')
 
     runs-on: ubuntu-latest
 

@@ -90,12 +90,13 @@ jobs:
       - name: Commit the new files
         run: |
           echo ${{ steps.Create_Issue_Branch.outputs.branchName }}
+          echo $(git show-ref)
           git config --global user.name "trained_models"
           git config --global user.email "trained_models"
           git add ./${{ steps.get_path.outputs.path }}
-          git commit -m "Added model files"
+          git commit -m "Added model folder and files"
           git pull --rebase origin main
-          git push origin ${{ steps.Create_Issue_Branch.outputs.branchName }}
+          git push -u origin ${{ steps.Create_Issue_Branch.outputs.branchName }}
 
   test_env_vars:
     runs-on: ubuntu-latest

@@ -41,6 +41,11 @@ jobs:
         id: get_path
         run: echo "path=${{ steps.issue-parser.outputs.issueparser_path }}" >> $GITHUB_OUTPUT
 
+      # Get docker url
+      - name: Get Docker URL
+        id: get_docker_url
+        run: echo "docker_url=${{ steps.issue-parser.outputs.issueparser_docker }}" >> $GITHUB_OUTPUT
+
       # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
       - name: Create Issue Branch
         id: branch
@@ -73,6 +78,14 @@ jobs:
             svn export --force $svn_url ./${{ steps.get_path.outputs.path }}
           done
 
+      - name: Clone docker folder
+        run: |
+          url = "${{ steps.get_docker_url.outputs.docker_url }}"
+          
+          svn_url=$(echo "$url" | sed -E 's|/tree/[^/]+|/trunk|; s|/blob/[^/]+|/trunk|')
+
+          svn export --force $svn_url ./${{ steps.get_path.outputs.path }}
+          
   test_env_vars:
     runs-on: ubuntu-latest
     needs: create_new_branch

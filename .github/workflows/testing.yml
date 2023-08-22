@@ -48,7 +48,7 @@ jobs:
 
       # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
       - name: Create Issue Branch
-        id: branch
+        id: Create_Issue_Branch
         uses: robvanderleek/create-issue-branch@main
         env:
           GITHUB_TOKEN:
@@ -89,13 +89,13 @@ jobs:
       # Commit the new created files and folders to the branch needs.create_new_branch.outputs.BRANCHNAME
       - name: Commit the new files
         run: |
-          echo ${{ steps.branch.outputs.branchName }}
+          echo ${{ steps.Create_Issue_Branch.outputs.branchName }}
           git config --global user.name "trained_models"
           git config --global user.email "trained_models"
           git add ./${{ steps.get_path.outputs.path }}
           git commit -m "Added model files"
           git pull --rebase origin main
-          git push origin ${{ steps.branch.outputs.branchName }}
+          git push origin ${{ steps.Create_Issue_Branch.outputs.branchName }}
 
   test_env_vars:
     runs-on: ubuntu-latest

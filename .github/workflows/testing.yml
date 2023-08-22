@@ -56,16 +56,7 @@ jobs:
         with:
           ref: ${{ steps.branch.outputs.branchName }}
     
-      - name: Generate SVN URLs
-        id: generate_urls
-        run: |
-          echo "pythons<<EOF" >> $GITHUB_ENV
-          python ./.github/workflows/getPythonScripts.py >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-        env:
-            pythons: ${{ env.pythons }}
-        
+    
       - name: Clone python scripts
         run: |
-          svn_urls="${{ env.pythons }}"
-          svn export "https://github.com/gaiborjosue/Machine_Learning_Models/trunk/NaiveBayes/Email_Similarity" ./${{ steps.get_path.outputs.path }}
+          python ./github/workflows/getPythonScripts.py

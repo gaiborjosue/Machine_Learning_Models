@@ -53,4 +53,18 @@ jobs:
       # Clone all python scripts in the form
       - name: Clone python scripts
         run: |
-          svn export https://github.com/neuronets/trained-models/trunk/DeepCSR/deepcsr/1.0/src ./${{ steps.get_path.outputs.path }}
+
+          python_scripts=${{ env.pythons }}
+          IFS=$'\n' read -rd '' -a urls <<< "$python_scripts"
+          for url in "${urls[@]}"; do
+            repo_url=$(echo "$url" | sed -E 's|/tree/.*$||')
+            branch_and_path=$(echo "$url" | sed -E 's|^.*tree/||')
+            branch=$(basename "$branch_and_path")
+            folder_path=${branch_and_path#*/}
+            if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+              svn_url="$repo_url/trunk/$folder_path"
+            else
+              svn_url="$repo_url/branches/$branch/$folder_path"
+            fi
+            svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
+          done

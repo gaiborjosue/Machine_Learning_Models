@@ -5,7 +5,7 @@ import re
 python_scripts = os.environ.get("pythons")
 
 # Split the URLs into a list
-urls = python_scripts.split('\n')
+urls = python_scripts.strip().split('\n')
 
 # Initialize a list to hold the generated SVN URLs
 svn_urls = []

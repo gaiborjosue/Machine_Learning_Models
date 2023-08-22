@@ -14,4 +14,4 @@ for url in urls:
     svn_url = re.sub(r'/tree/[^/]+|/blob/[^/]+', '/trunk', url)
     
     # Perform the svn export using subprocess
-    subprocess.run(["svn", "export", svn_url])
+    subprocess.run(["svn", "export", svn_url, "./${{ steps.get_path.outputs.path }}"])

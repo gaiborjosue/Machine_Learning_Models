@@ -67,10 +67,7 @@ jobs:
           for url in "${urls[@]}"; do
             # Replace /tree/branchName or /blob/branchName with /trunk
             svn_url=$(echo "$url" | sed -E 's|/tree/[^/]+|/trunk|; s|/blob/[^/]+|/trunk|')
-            
-            # Remove %0D characters from svn_url
-            svn_url=$(echo "$svn_url" | sed 's/%0D//g')
-            
+          
             # Perform svn export
-            svn export "$svn_url" "./${{ steps.get_path.outputs.path }}"
+            svn export $svn_url "./${{ steps.get_path.outputs.path }}"
           done

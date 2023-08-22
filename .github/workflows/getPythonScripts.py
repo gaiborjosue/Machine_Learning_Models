@@ -13,6 +13,6 @@ urls = python_scripts.strip().split('\n')
 for url in urls:
     # Replace /tree/branchName or /blob/branchName with /trunk
     svn_url = re.sub(r'/tree/[^/]+|/blob/[^/]+', '/trunk', url)
-    
+    print(url)
     # Perform the svn export using subprocess
     subprocess.run(["svn", "export", svn_url, "./${{steps.get_path.outputs.path}}"])

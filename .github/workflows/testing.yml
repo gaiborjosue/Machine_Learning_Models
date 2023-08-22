@@ -55,7 +55,14 @@ jobs:
         run: |
 
           python_scripts="${{ env.pythons }}"
+          python_scripts="${{ env.pythons }}"
           for url in $python_scripts; do
-            svn_url=$(echo "$url" | sed -E 's|/tree/.*$|/trunk|')
+            if [[ $url == *"/tree/"* ]]; then
+              svn_url="${url%/tree/*}/trunk/${url#*/tree/}"
+            elif [[ $url == *"/blob/"* ]]; then
+              svn_url="${url%/blob/*}/trunk/${url#*/blob/}"
+            else
+              svn_url="$url"
+            fi
             svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
           done

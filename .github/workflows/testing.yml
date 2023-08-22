@@ -59,4 +59,4 @@ jobs:
     
       - name: Clone python scripts
         run: |
-          python ./github/workflows/getPythonScripts.py
+          python ./.github/workflows/getPythonScripts.py

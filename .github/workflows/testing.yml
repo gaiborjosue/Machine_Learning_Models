@@ -69,5 +69,5 @@ jobs:
         run: |
           svn_urls="${{ env.pythons }}"
           for svn_url in $svn_urls; do
-            svn export ${echo $svn_url} ./${{ steps.get_path.outputs.path }}
+            svn export $svn_url
           done

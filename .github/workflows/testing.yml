@@ -6,8 +6,9 @@ on:
     types: [ assigned ]
 
 jobs:
+  
   create_new_branch:
-    if: startsWith("${{github.event.issue.title}}", "New Model:")
+    if: startsWith(github.event.issue.title, "New Model:")
 
     runs-on: ubuntu-latest
 
@@ -15,8 +16,11 @@ jobs:
       BRANCHNAME: ${{ steps.branch.outputs.branchName }}
 
     steps:
+    
+
     # Checkout the repository to the GitHub Actions runner
     - uses: actions/checkout@v3
+    
 
     - uses: stefanbuck/github-issue-parser@v3
       id: issue-parser

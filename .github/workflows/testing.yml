@@ -55,16 +55,7 @@ jobs:
         run: |
 
           python_scripts=${{ env.pythons }}
-          IFS=$'\n' read -rd '' -a urls <<< "$python_scripts"
-          for url in "${urls[@]}"; do
-            repo_url=$(echo "$url" | sed -E 's|/tree/.*$||')
-            branch_and_path=$(echo "$url" | sed -E 's|^.*tree/||')
-            branch=$(basename "$branch_and_path")
-            folder_path=${branch_and_path#*/}
-            if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
-              svn_url="$repo_url/trunk/$folder_path"
-            else
-              svn_url="$repo_url/branches/$branch/$folder_path"
-            fi
+          for url in $python_scripts; do
+            svn_url=$(echo "$url" | sed -E 's|/tree/.*$|/trunk|')
             svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
           done

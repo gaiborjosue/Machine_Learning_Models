@@ -26,15 +26,13 @@ jobs:
     - name: Get Python Scripts
       id: python_scripts
       run: |
-        pythons="${{ steps.issue-parser.outputs.issueparser_python-scripts }}"
-        pythons="${pythons//'%'/'%25'}"
-        pythons="${pythons//$'\n'/'%0A'}"
-        pythons="${pythons//$'\r'/'%0D'}"
-        echo "pythons=$pythons" >> $GITHUB_OUTPUT
+        echo "pythons<<EOF" >> $GITHUB_ENV
+        echo "${{ steps.issue-parser.outputs.issueparser_python-scripts }} >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
 
     # Print python scripts
     - name: Print Python Scripts
-      run: echo ${{ steps.python_scripts.outputs.pythons }}
+      run: echo ${{ env.pythons }}
 
     # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
     - name: Create Issue Branch

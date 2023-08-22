@@ -55,7 +55,6 @@ jobs:
         run: |
 
           python_scripts="${{ env.pythons }}"
-          python_scripts="${{ env.pythons }}"
           for url in $python_scripts; do
             if [[ $url == *"/tree/"* ]]; then
               svn_url="${url%/tree/*}/trunk/${url#*/tree/}"

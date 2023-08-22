@@ -89,12 +89,13 @@ jobs:
       # Commit the new created files and folders to the branch needs.create_new_branch.outputs.BRANCHNAME
       - name: Commit the new files
         run: |
+          echo ${{ steps.branch.outputs.branchName }}
           git config --global user.name "trained_models"
           git config --global user.email "trained_models"
           git add ./${{ steps.get_path.outputs.path }}
           git commit -m "Added model files"
           git pull --rebase origin main
-          git push
+          git push origin ${{ steps.branch.outputs.branchName }}
 
   test_env_vars:
     runs-on: ubuntu-latest

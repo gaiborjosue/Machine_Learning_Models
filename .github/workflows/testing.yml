@@ -69,5 +69,5 @@ jobs:
         run: |
           svn_urls="${{ env.pythons }}"
           for svn_url in $svn_urls; do
-            svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
+            svn export "https://github.com/gaiborjosue/Machine_Learning_Models/trunk/NaiveBayes/Email_Similarity" ./${{ steps.get_path.outputs.path }}
           done

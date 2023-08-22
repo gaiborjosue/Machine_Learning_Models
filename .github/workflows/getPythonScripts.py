@@ -3,7 +3,7 @@ import re
 import subprocess
 
 # Get the python_scripts environment variable
-python_scripts = "https://github.com/neuronets/trained-models/tree/master/DeepCSR/deepcsr/1.0/src\nhttps://github.com/neuronets/trained-models/tree/master/neuronets/ams/0.1.0/weights"
+python_scripts = os.environ.get("pythons")
 
 # Split the URLs into a list
 urls = python_scripts.strip().split('\n')
@@ -13,5 +13,6 @@ urls = python_scripts.strip().split('\n')
 for url in urls:
     # Replace /tree/branchName or /blob/branchName with /trunk
     svn_url = re.sub(r'/tree/[^/]+|/blob/[^/]+', '/trunk', url)
-    print(url)
-
+    
+    # Perform the svn export using subprocess
+    subprocess.run(["svn", "export", svn_url, "./${{steps.get_path.outputs.path}}"])

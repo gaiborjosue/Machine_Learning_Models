@@ -26,7 +26,7 @@ jobs:
     - name: Get Python Scripts
       id: python_scripts
       run: |
-        pythons=${{ steps.issue-parser.outputs.issueparser_python-scripts }}
+        pythons="${{ steps.issue-parser.outputs.issueparser_python-scripts }}"
         pythons="${pythons//'%'/'%25'}"
         pythons="${pythons//$'\n'/'%0A'}"
         pythons="${pythons//$'\r'/'%0D'}"

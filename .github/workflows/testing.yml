@@ -94,7 +94,7 @@ jobs:
           git add ./${{ steps.get_path.outputs.path }}
           git commit -m "Added model files"
           git pull --rebase origin main
-          git push origin HEAD:${{ steps.branch.outputs.branchName }}
+          git push origin main:${{ steps.branch.outputs.branchName }}
 
   test_env_vars:
     runs-on: ubuntu-latest

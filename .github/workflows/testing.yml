@@ -60,14 +60,12 @@ jobs:
       - name: Clone python scripts
         run: |
           python_scripts="${{ env.pythons }}"
-          # Split the URLs into a list
+
           IFS=$'\n' read -rd '' -a urls <<< "$python_scripts"
           
-          # Loop through each URL
           for url in "${urls[@]}"; do
-            # Replace /tree/branchName or /blob/branchName with /trunk
+
             svn_url=$(echo "$url" | sed -E 's|/tree/[^/]+|/trunk|; s|/blob/[^/]+|/trunk|')
-          
-            # Perform svn export
+
             svn export $svn_url "./${{ steps.get_path.outputs.path }}"
           done

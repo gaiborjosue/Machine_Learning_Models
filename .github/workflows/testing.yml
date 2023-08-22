@@ -53,7 +53,7 @@ jobs:
       # Clone all python scripts in the form
       - name: Clone python scripts
         run: |
-          python_scripts="${{ env.pythons }}""
+          python_scripts="${{ env.pythons }}"
           IFS=$'\n' read -rd '' -a urls <<< "$python_scripts"
           for url in "${urls[@]}"; do
             repo_url=$(echo "$url" | sed -E 's|/tree/.*$||')

@@ -102,7 +102,16 @@ jobs:
     steps:
     
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ needs.create_new_branch.outputs.BRANCHNAME }}
 
     - name: Get the Path
       id: get_path
       run: echo "${{ needs.create_new_branch.outputs.PYTHONS }}"
+
+    - name: Commit the new files
+      run: |
+        git config --global user.name "trained_models"
+        git config --global user.email "trained_models"
+        git commit -m "testin"
+        git push -u origin ${{ needs.create_new_branch.outputs.BRANCHNAME }}

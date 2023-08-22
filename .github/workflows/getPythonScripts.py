@@ -5,9 +5,8 @@ import subprocess
 # Get the python_scripts environment variable
 python_scripts = os.environ.get("pythons")
 
-# Split the URLs into a list
-urls = python_scripts.strip().split('\n')
-
+# Split the URLs into a list and strip whitespace
+urls = [url.strip() for url in python_scripts.strip().split('\n')]
 
 # Loop through each URL
 for url in urls:

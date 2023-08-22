@@ -13,6 +13,7 @@ jobs:
 
     outputs:
       BRANCHNAME: ${{ steps.branch.outputs.branchName }}
+      PYTHONS: ${{ env.pythons2 }}
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -82,4 +83,4 @@ jobs:
 
     - name: Get the Path
       id: get_path
-      run: echo "${{ needs.create_new_branch.env.pythons2 }}"
+      run: echo "${{ needs.create_new_branch.outputs.PYTHONS }}"

@@ -93,7 +93,7 @@ jobs:
           git config --global user.email "trained_models"
           git add ./${{ steps.get_path.outputs.path }}
           git commit -m "Added model files"
-          git pull origin master
+          git pull origin main
           git push origin HEAD:${{ steps.branch.outputs.branchName }}
 
   test_env_vars:

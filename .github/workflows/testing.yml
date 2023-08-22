@@ -56,11 +56,6 @@ jobs:
 
       - name: Install svn
         run: sudo apt-get install subversion
-
-      # Checkout the repository to the GitHub Actions runner to the new branch created for the issue
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ steps.branch.outputs.branchName }}
     
       - name: Generate SVN URLs
         id: generate_urls

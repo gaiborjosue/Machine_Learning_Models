@@ -60,7 +60,7 @@ jobs:
         id: generate_urls
         run: |
           echo "pythons<<EOF" >> $GITHUB_ENV
-          (python ./.github/workflows/getPythonScripts.py) >> $GITHUB_ENV
+          python ./.github/workflows/getPythonScripts.py >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
         env:
             pythons: ${{ env.pythons }}
@@ -69,6 +69,5 @@ jobs:
         run: |
           svn_urls="${{ env.pythons }}"
           for svn_url in $svn_urls; do
-            svn_url=$(echo "$svn_url" | sed 's/%0D//g')
-            svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
+          echo "Manipulated URL: $svn_url"
           done

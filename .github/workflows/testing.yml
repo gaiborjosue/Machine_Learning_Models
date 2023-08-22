@@ -16,20 +16,31 @@ jobs:
       PYTHONS: ${{ env.pythons2 }}
 
     steps:
-      # Checkout the repository to the GitHub Actions runner
-      - uses: actions/checkout@v3
-
+        # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
+      - name: Create Issue Branch
+        id: Create_Issue_Branch
+        uses: robvanderleek/create-issue-branch@main
+        env:
+          GITHUB_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
+    
       # Set up Python
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.11
 
+      # Checkout the repository to the GitHub Actions runner
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.Create_Issue_Branch.outputs.branchName }}          
+
+
       - uses: stefanbuck/github-issue-parser@v3
         id: issue-parser
         with:
           template-path: .github/ISSUE_TEMPLATE/addModel.yml # optional but recommended
-
+      
       - name: Get Python Scripts
         id: python_scripts
         run: |
@@ -45,14 +56,6 @@ jobs:
       - name: Get Docker URL
         id: get_docker_url
         run: echo "docker_url=${{ steps.issue-parser.outputs.issueparser_docker }}" >> $GITHUB_OUTPUT
-
-      # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
-      - name: Create Issue Branch
-        id: Create_Issue_Branch
-        uses: robvanderleek/create-issue-branch@main
-        env:
-          GITHUB_TOKEN:
-            ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install svn
         run: sudo apt-get install subversion

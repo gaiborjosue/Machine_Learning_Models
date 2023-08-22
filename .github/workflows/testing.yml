@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.11
-          
+
       - uses: stefanbuck/github-issue-parser@v3
         id: issue-parser
         with:
@@ -58,7 +58,7 @@ jobs:
     
       - name: Generate SVN URLs
         id: generate_urls
-        run: python generate_svn_urls.py
+        run: python ./.github/workflows/getPythonScripts.py
         env:
             pythons: ${{ env.pythons }}
         

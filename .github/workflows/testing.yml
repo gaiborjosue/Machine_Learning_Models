@@ -69,5 +69,6 @@ jobs:
         run: |
           svn_urls="${{ env.pythons }}"
           for svn_url in $svn_urls; do
+            svn_url=$(echo "$svn_url" | sed 's/%0D//g')
             svn export "$svn_url" ./${{ steps.get_path.outputs.path }}
           done

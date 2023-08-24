@@ -111,14 +111,14 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ${{ steps.set_image_name.outputs.image_name }} ./${{ steps.get_path.outputs.path }}/dockercontext
-          docker save --output ${{ steps.set_image_name.outputs.model_name }}.tar ${{ steps.set_image_name.outputs.image_name }}
+          docker save --output ./${{ steps.get_path.outputs.path }}/${{ steps.set_image_name.outputs.model_name }}.tar ${{ steps.set_image_name.outputs.model_name }}
 
       # Upload artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.set_image_name.outputs.model_name }}
-          path: ${{ steps.set_image_name.outputs.model_name }}.tar
+          path: ./${{ steps.get_path.outputs.path }}/dockercontext/${{ steps.set_image_name.outputs.model_name }}.tar
 
   test_env_vars:
     runs-on: ubuntu-latest
@@ -136,8 +136,9 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: ${{ needs.create_new_branch.outputs.MODELNAME }}
-        path: ./${{ needs.create_new_branch.outputs.MODELPATH }}
+        path: ./${{ needs.create_new_branch.outputs.MODELPATH }}/dockercontext
+
     # Load the Docker image
     - name: Load Docker image
       run: |
-        docker load -i "./${{ needs.create_new_branch.outputs.MODELPATH }}/${{ needs.create_new_branch.outputs.MODELNAME }}.tar"
+        docker load -i "./${{ needs.create_new_branch.outputs.MODELPATH }}/dockercontext/${{ needs.create_new_branch.outputs.MODELNAME }}.tar"

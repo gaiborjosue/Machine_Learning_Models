@@ -136,9 +136,8 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: ${{ needs.create_new_branch.outputs.MODELNAME }}
-        path: ${{ needs.create_new_branch.outputs.MODELNAME }}
-
+        path: ./${{ needs.create_new_branch.outputs.MODELPATH }}
     # Load the Docker image
     - name: Load Docker image
       run: |
-        docker load -i "./${{ needs.create_new_branch.outputs.MODELNAME }}.tar"
+        docker load -i "./${{ needs.create_new_branch.outputs.MODELPATH }}/${{ needs.create_new_branch.outputs.MODELNAME }}.tar"

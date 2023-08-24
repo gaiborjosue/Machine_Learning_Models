@@ -105,9 +105,7 @@ jobs:
       with:
         ref: ${{ needs.create_new_branch.outputs.BRANCHNAME }}
 
-    - name: Get the Path
-      id: get_path
-      run: echo "${{ needs.create_new_branch.outputs.PYTHONS }}"
+
 
     - name: Commit the new files
       run: |

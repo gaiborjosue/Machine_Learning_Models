@@ -141,4 +141,4 @@ jobs:
     # Load the Docker image
     - name: Load Docker image
       run: |
-        docker image load -i -q "./${{ needs.create_new_branch.outputs.MODELNAME }}.tar"
+        docker load -i -q "./${{ needs.create_new_branch.outputs.MODELNAME }}.tar"

@@ -111,7 +111,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ${{ steps.set_image_name.outputs.image_name }} ./${{ steps.get_path.outputs.path }}/dockercontext
-          docker save --output ./${{ steps.get_path.outputs.path }}/${{ steps.set_image_name.outputs.model_name }}.tar ${{ steps.set_image_name.outputs.model_name }}
+          docker save --output ./${{ steps.get_path.outputs.path }}/dockercontext/${{ steps.set_image_name.outputs.model_name }}.tar ${{ steps.set_image_name.outputs.model_name }}
 
       # Upload artifact
       - name: Upload artifact

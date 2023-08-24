@@ -14,6 +14,8 @@ jobs:
     outputs:
       BRANCHNAME: ${{ steps.Create_Issue_Branch.outputs.branchName }}
       PYTHONS: ${{ env.pythons2 }}
+      IMAGENAME: ${{ steps.set_image_name.outputs.image_name }}
+      MODELPATH: ${{ steps.get_path.outputs.path }}
 
     steps:
         # This will automatically create a new branch from this issue, using custom config at /.github/issue-branch.yml
@@ -95,6 +97,27 @@ jobs:
           git commit -m "Added model folder and files"
           git push -u origin ${{ steps.Create_Issue_Branch.outputs.branchName }}
 
+      # Get image name
+      - name: Set docker image name
+        id: set_image_name
+        run: |
+          full_path="${{ steps.get_path.outputs.path }}"
+          model_name=$(echo "$full_path" | awk -F '/' '{print $(NF-1)}')
+          echo "image_name=neuronets/$model_name" >> $GITHUB_OUTPUT
+
+      # Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ steps.set_image_name.outputs.image_name }} ./${{ steps.get_path.outputs.pat }}
+          docker save --output ./${{ steps.get_path.outputs.pat }}/${{ steps.set_image_name.outputs.image_name }}.tar ${{ steps.set_image_name.outputs.image_name }}
+
+      # Upload artifact
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.set_image_name.outputs.image_name }}
+          path: ./${{ steps.get_path.outputs.pat }}/${{ steps.set_image_name.outputs.image_name }}.tar
+
   test_env_vars:
     runs-on: ubuntu-latest
     needs: create_new_branch
@@ -106,10 +129,14 @@ jobs:
         ref: ${{ needs.create_new_branch.outputs.BRANCHNAME }}
 
 
+    # Download docker artifact
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ needs.create_new_branch.outputs.IMAGENAME }}
+        path: ./${{ needs.create_new_branch.outputs.MODELPATH }}/${{ needs.create_new_branch.outputs.IMAGENAME }}.tar
 
-    - name: Commit the new files
+    # Load the Docker image
+    - name: Load Docker image
       run: |
-        git config --global user.name "trained_models"
-        git config --global user.email "trained_models"
-        git commit -m "testin"
-        git push -u origin ${{ needs.create_new_branch.outputs.BRANCHNAME }}
+        docker load --input ./${{ needs.create_new_branch.outputs.MODELPATH }}/${{ needs.create_new_branch.outputs.IMAGENAME }}.tar

@@ -108,15 +108,15 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ steps.set_image_name.outputs.image_name }} ./${{ steps.get_path.outputs.pat }}
-          docker save --output ./${{ steps.get_path.outputs.pat }}/${{ steps.set_image_name.outputs.image_name }}.tar ${{ steps.set_image_name.outputs.image_name }}
+          docker build -t ${{ steps.set_image_name.outputs.image_name }} ./${{ steps.get_path.outputs.path }}/docker
+          docker save --output ./${{ steps.get_path.outputs.path }}/${{ steps.set_image_name.outputs.image_name }}.tar ${{ steps.set_image_name.outputs.image_name }}
 
       # Upload artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.set_image_name.outputs.image_name }}
-          path: ./${{ steps.get_path.outputs.pat }}/${{ steps.set_image_name.outputs.image_name }}.tar
+          path: ./${{ steps.get_path.outputs.path }}/${{ steps.set_image_name.outputs.image_name }}.tar
 
   test_env_vars:
     runs-on: ubuntu-latest

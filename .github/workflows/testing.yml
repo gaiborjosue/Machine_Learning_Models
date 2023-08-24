@@ -84,7 +84,7 @@ jobs:
           echo $url
           svn_url=$(echo "$url" | sed -E 's|/tree/[^/]+|/trunk|; s|/blob/[^/]+|/trunk|')
 
-          svn export --force $svn_url ./${{ steps.get_path.outputs.path }}
+          svn export --force $svn_url ./${{ steps.get_path.outputs.path }}/dockercontext
 
       # Commit the new created files and folders to the branch needs.create_new_branch.outputs.BRANCHNAME
       - name: Commit the new files

@@ -141,5 +141,5 @@ jobs:
     # Load the Docker image
     - name: Load Docker image
       run: |
-        cd ./${{ needs.create_new_branch.outputs.MODELPATH }}
-        docker image load -i ${{ needs.create_new_branch.outputs.MODELNAME }}.tar
+        cd ./${{ needs.create_new_branch.outputs.MODELPATH }}/
+        docker image load -i "${{ needs.create_new_branch.outputs.MODELNAME }}.tar"
